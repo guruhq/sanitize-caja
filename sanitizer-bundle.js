@@ -410,7 +410,7 @@ URI.prototype.setPath = function (newPath) {
 URI.prototype.setRawPath = function (newPath) {
   if (newPath) {
     newPath = String(newPath);
-    this.path_ = 
+    this.path_ =
       // Paths must start with '/' unless this is a path-relative URL.
       (!this.domain_ || /^\//.test(newPath)) ? newPath : '/' + newPath;
   } else {
@@ -2369,7 +2369,8 @@ var html = (function(html4) {
   function makeTagPolicy(
     opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     return function(tagName, attribs) {
-      if (!(html4.ELEMENTS[tagName] & html4.eflags['UNSAFE'])) {
+      //If we have a valid tag.
+      if (html4.ELEMENTS[tagName] !== null) {
         return {
           'attribs': sanitizeAttribs(tagName, attribs,
             opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger)
