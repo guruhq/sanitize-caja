@@ -2369,11 +2369,10 @@ var html = (function(html4) {
   function makeTagPolicy(
     opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     return function(tagName, attribs) {
-      //If we have a valid tag.
+      //If we have a valid tag, return all attribs
       if (html4.ELEMENTS[tagName] !== null) {
         return {
-          'attribs': sanitizeAttribs(tagName, attribs,
-            opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger)
+          'attribs': attribs
         };
       } else {
         if (opt_logger) {
