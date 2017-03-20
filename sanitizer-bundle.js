@@ -1433,7 +1433,7 @@ var html = (function(html4) {
     'AMP': '&',
     'quot': '"',
     'apos': '\'',
-    'nbsp': '\240'
+    'nbsp': '\u00A0'
   };
 
   // Patterns for types of entity/character reference names.
@@ -2369,10 +2369,10 @@ var html = (function(html4) {
   function makeTagPolicy(
     opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger) {
     return function(tagName, attribs) {
-      //If we have a valid tag, return all attribs
-      if (html4.ELEMENTS[tagName] !== null) {
+      if (!(html4.ELEMENTS[tagName] & html4.eflags['UNSAFE'])) {
         return {
-          'attribs': attribs
+          'attribs': sanitizeAttribs(tagName, attribs,
+            opt_naiveUriRewriter, opt_nmTokenPolicy, opt_logger)
         };
       } else {
         if (opt_logger) {
@@ -2431,16 +2431,21 @@ var html_sanitize = html['sanitize'];
 // Loosen restrictions of Caja's
 // html-sanitizer to allow for styling
 html4.ATTRIBS['*::style'] = 0;
-html4.ELEMENTS['style'] = 0;
 html4.ATTRIBS['a::target'] = 0;
 html4.ELEMENTS['video'] = 0;
-html4.ATTRIBS['video::src'] = 0;
+html4.ATTRIBS['video::src'] = 1;
 html4.ATTRIBS['video::poster'] = 0;
 html4.ATTRIBS['video::controls'] = 0;
 html4.ELEMENTS['audio'] = 0;
-html4.ATTRIBS['audio::src'] = 0;
+html4.ATTRIBS['audio::src'] = 1;
 html4.ATTRIBS['video::autoplay'] = 0;
 html4.ATTRIBS['video::controls'] = 0;
+
+//Allow for iframes
+html4.ELEMENTS["iframe"] = 0;
+html4.ATTRIBS["iframe::src"] = 1;
+html4.LOADERTYPES["iframe::src"] = 1;
+html4.URIEFFECTS["iframe::src"] = 1;
 
 if (typeof module !== 'undefined') {
     module.exports = html_sanitize;
