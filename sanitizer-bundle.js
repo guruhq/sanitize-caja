@@ -2155,7 +2155,7 @@ var html = (function(html4) {
     });
   }
 
-  var ALLOWED_URI_SCHEMES = /^(?:https?|mailto|data)$/i;
+  var ALLOWED_URI_SCHEMES = /^(?:https?|mailto|data|tel)$/i;
 
   function safeUri(uri, effect, ltype, hints, naiveUriRewriter) {
     if (!naiveUriRewriter) { return null; }
@@ -2164,7 +2164,7 @@ var html = (function(html4) {
       if (parsed) {
         if (!parsed.hasScheme() ||
             ALLOWED_URI_SCHEMES.test(parsed.getScheme())) {
-          var safe = naiveUriRewriter(parsed, effect, ltype, hints);
+          var safe = naiveUriRewriter(parsed, effect, ltype, hints, '' + uri);
           return safe ? safe.toString() : null;
         }
       }
@@ -2434,18 +2434,30 @@ html4.ATTRIBS['*::style'] = 0;
 html4.ATTRIBS['a::target'] = 0;
 html4.ELEMENTS['video'] = 0;
 html4.ATTRIBS['video::src'] = 1;
-html4.ATTRIBS['video::poster'] = 0;
+html4.ATTRIBS['video::autoplay'] = 0;
+html4.ATTRIBS['video::poster'] = 1;
 html4.ATTRIBS['video::controls'] = 0;
 html4.ELEMENTS['audio'] = 0;
 html4.ATTRIBS['audio::src'] = 1;
-html4.ATTRIBS['video::autoplay'] = 0;
-html4.ATTRIBS['video::controls'] = 0;
+html4.ATTRIBS['audio::autoplay'] = 0;
+html4.ATTRIBS['audio::controls'] = 0;
+html4.ATTRIBS['source::src'] = 1;
+html4.ATTRIBS['source::srcset'] = 1;
 
 //Allow for iframes
 html4.ELEMENTS["iframe"] = 0;
 html4.ATTRIBS["iframe::src"] = 1;
 html4.LOADERTYPES["iframe::src"] = 1;
 html4.URIEFFECTS["iframe::src"] = 1;
+html4.ATTRIBS["iframe::allowfullscreen"] = 0;
+html4.ATTRIBS["iframe::mozallowfullscreen"] = 0;
+html4.ATTRIBS["iframe::msallowfullscreen"] = 0;
+html4.ATTRIBS["iframe::oallowfullscreen"] = 0;
+html4.ATTRIBS["iframe::scrolling"] = 0;
+html4.ATTRIBS["iframe::webkitallowfullscreen"] = 0;
+
+//Add missing attributes
+html4.ATTRIBS["a::rel"] = 0;
 
 if (typeof module !== 'undefined') {
     module.exports = html_sanitize;

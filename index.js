@@ -6,12 +6,15 @@ module.exports = function(_) {
 };
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=255107
-function cleanUrl(url) {
+function cleanUrl(url, effect, ltype, hints, original) {
     'use strict';
-    if (/^https?/.test(url.getScheme())) return url.toString();
-    if (/^mailto?/.test(url.getScheme())) return url.toString();
+
+    if (!url.getScheme()) return original;
+    if (/^https?/.test(url.getScheme())) return original;
+    if (/^mailto?/.test(url.getScheme())) return original;
+    if (/^tel?/.test(url.getScheme())) return original;
     if ('data' == url.getScheme() && /^image/.test(url.getPath())) {
-        return url.toString();
+        return original;
     }
 }
 
